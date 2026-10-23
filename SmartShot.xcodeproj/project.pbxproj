@@ -1,0 +1,785 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0C433A58A51693B71C9311F2 /* SmartShotCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18175DECC5D11EF0CE72B293 /* SmartShotCore.framework */; };
+		16196B512DDE39A40F2EFDA6 /* EventJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6CEBE04D9254242BBA1B55F /* EventJournal.swift */; };
+		1D0CD5FEF424292BDF7CC37F /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6551C547FC32D5C0C6F60943 /* Models.swift */; };
+		21E0017D69CACF212A80090B /* SettingsViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E44A5CB2E966EB18420523F /* SettingsViews.swift */; };
+		2AAAC84FE00BA218321ADC27 /* CoreComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB74EB4E21C6C5A4F06B0319 /* CoreComponentTests.swift */; };
+		41907063361BFC52F01ABD75 /* SmartShotCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18175DECC5D11EF0CE72B293 /* SmartShotCore.framework */; };
+		44FDE1B4BE54B98BCEF69AEB /* SmartShotCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 18175DECC5D11EF0CE72B293 /* SmartShotCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6B01FE6DB899D0C968732F15 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CB7FF8EE7F20F5753CFEDD /* MenuBarView.swift */; };
+		7053F16415CA0C32C615B3F3 /* SmartShotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6DA138A44FDBBB7A40A316 /* SmartShotApp.swift */; };
+		7158DC3E7C329817374C1093 /* CaptureSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B100B3068E06A13594C93A /* CaptureSession.swift */; };
+		75480D5B34D2102E2347CDAF /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5922AD27D1FE8F5FEC961C /* AppState.swift */; };
+		8044D89767D2C187F158C376 /* MainWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E362D2FA057EFC369D514A93 /* MainWindowView.swift */; };
+		8C0A36E11D435AC592884466 /* SmartShotCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 18175DECC5D11EF0CE72B293 /* SmartShotCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		90D894B6E46ADEF9B5CFDB47 /* GrayFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97AEEB33F9D9C5805569EB85 /* GrayFrame.swift */; };
+		94B5522673497A6F11772177 /* CapturePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E5B4711FB6483C9ECB038D /* CapturePolicy.swift */; };
+		94FA0BDE0157DEE8B55A04A3 /* GrayConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FCDB1E378C5B88105F8B1B /* GrayConverter.swift */; };
+		9F8CC2C540911B46CF09410F /* SyntheticSceneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847662D2E7F510A1ACCD13A3 /* SyntheticSceneTests.swift */; };
+		A1935F6D09CA7059E75986F2 /* SmartShotCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18175DECC5D11EF0CE72B293 /* SmartShotCore.framework */; };
+		ADFC8D27E0C665D2E63F67B4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C814587AAA4A8D5A65F788E0 /* main.swift */; };
+		B2A03FBE72223AFFB17350B7 /* FrameBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFFB97CCD294BB54B02BFFB /* FrameBuffer.swift */; };
+		C977316B1D2D898688DE1497 /* CaptureWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF1333359F9C1B5C62D2E3B /* CaptureWriter.swift */; };
+		DB8E1B7B9233F5DA7D4C1434 /* DetectionParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CA2790183318E9EB7AEEB33 /* DetectionParameters.swift */; };
+		DF5A274DC8405C5C2226B8A2 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F5DCC02C37ACAACFD43B18 /* AppSettings.swift */; };
+		E042A22E93A0F11F7EB60CF5 /* CaptureService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE35DF04529F01936BAD7DDA /* CaptureService.swift */; };
+		E4891FAE5C7A2037366B28D4 /* TargetPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438CFAF81C94427CEB3649F3 /* TargetPickerView.swift */; };
+		EE7483E5749287E86EC44B05 /* ReplayEquivalenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C2656372B44A5D9ECCC9F8 /* ReplayEquivalenceTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B93E8EE1FEC1165C9305EBAA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CDD4BEE0B5D6A2BE686F7741 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EB7BF82FE5D6DFE413208AF1;
+			remoteInfo = SmartShotCore;
+		};
+		E307BDF6C98C57F4B6866833 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CDD4BEE0B5D6A2BE686F7741 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EB7BF82FE5D6DFE413208AF1;
+			remoteInfo = SmartShotCore;
+		};
+		FCE1E4BD1CA8FEFDCE42A2CC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CDD4BEE0B5D6A2BE686F7741 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EB7BF82FE5D6DFE413208AF1;
+			remoteInfo = SmartShotCore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		ADDB5040EC5FEBBAF56EC4C1 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				44FDE1B4BE54B98BCEF69AEB /* SmartShotCore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8790CF1BF613C00CD2B67CC /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8C0A36E11D435AC592884466 /* SmartShotCore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		07B100B3068E06A13594C93A /* CaptureSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureSession.swift; sourceTree = "<group>"; };
+		0CFFB97CCD294BB54B02BFFB /* FrameBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameBuffer.swift; sourceTree = "<group>"; };
+		18175DECC5D11EF0CE72B293 /* SmartShotCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SmartShotCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CA2790183318E9EB7AEEB33 /* DetectionParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetectionParameters.swift; sourceTree = "<group>"; };
+		1E6DA138A44FDBBB7A40A316 /* SmartShotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartShotApp.swift; sourceTree = "<group>"; };
+		2E44A5CB2E966EB18420523F /* SettingsViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViews.swift; sourceTree = "<group>"; };
+		3C5922AD27D1FE8F5FEC961C /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		438CFAF81C94427CEB3649F3 /* TargetPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetPickerView.swift; sourceTree = "<group>"; };
+		47E5B4711FB6483C9ECB038D /* CapturePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturePolicy.swift; sourceTree = "<group>"; };
+		4DAEFB0A05ED9EEC031DA793 /* SmartShot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmartShot.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6551C547FC32D5C0C6F60943 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		847662D2E7F510A1ACCD13A3 /* SyntheticSceneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyntheticSceneTests.swift; sourceTree = "<group>"; };
+		97AEEB33F9D9C5805569EB85 /* GrayFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrayFrame.swift; sourceTree = "<group>"; };
+		A7FCDB1E378C5B88105F8B1B /* GrayConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrayConverter.swift; sourceTree = "<group>"; };
+		AB74EB4E21C6C5A4F06B0319 /* CoreComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreComponentTests.swift; sourceTree = "<group>"; };
+		AEF1333359F9C1B5C62D2E3B /* CaptureWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureWriter.swift; sourceTree = "<group>"; };
+		B2EA02B6A75E6D164023864A /* SmartShotCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SmartShotCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C4CB7FF8EE7F20F5753CFEDD /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		C814587AAA4A8D5A65F788E0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		D4C2656372B44A5D9ECCC9F8 /* ReplayEquivalenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplayEquivalenceTests.swift; sourceTree = "<group>"; };
+		DDB6607DD819EDC1399B9B2A /* smartshot-replay */ = {isa = PBXFileReference; includeInIndex = 0; path = "smartshot-replay"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E362D2FA057EFC369D514A93 /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
+		E6CEBE04D9254242BBA1B55F /* EventJournal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventJournal.swift; sourceTree = "<group>"; };
+		F5F5DCC02C37ACAACFD43B18 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		FE35DF04529F01936BAD7DDA /* CaptureService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureService.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		613F300E3CF4DBFCFD1931AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0C433A58A51693B71C9311F2 /* SmartShotCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		915FB35734EA44FAE6DDC238 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1935F6D09CA7059E75986F2 /* SmartShotCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9C3612314684540FDE1FE7EB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41907063361BFC52F01ABD75 /* SmartShotCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		24A76F4320367CAD0A5B5AB0 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F5F5DCC02C37ACAACFD43B18 /* AppSettings.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		24ADDCC40F5E079648F9D367 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				3C5922AD27D1FE8F5FEC961C /* AppState.swift */,
+				1E6DA138A44FDBBB7A40A316 /* SmartShotApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		42D786CF29F77607C8AC781D /* SmartShotCore */ = {
+			isa = PBXGroup;
+			children = (
+				47E5B4711FB6483C9ECB038D /* CapturePolicy.swift */,
+				AEF1333359F9C1B5C62D2E3B /* CaptureWriter.swift */,
+				1CA2790183318E9EB7AEEB33 /* DetectionParameters.swift */,
+				E6CEBE04D9254242BBA1B55F /* EventJournal.swift */,
+				0CFFB97CCD294BB54B02BFFB /* FrameBuffer.swift */,
+				A7FCDB1E378C5B88105F8B1B /* GrayConverter.swift */,
+				97AEEB33F9D9C5805569EB85 /* GrayFrame.swift */,
+				6551C547FC32D5C0C6F60943 /* Models.swift */,
+			);
+			path = SmartShotCore;
+			sourceTree = "<group>";
+		};
+		46E6E59B19FFF151E0188944 /* SmartShotCoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				AB74EB4E21C6C5A4F06B0319 /* CoreComponentTests.swift */,
+				D4C2656372B44A5D9ECCC9F8 /* ReplayEquivalenceTests.swift */,
+				847662D2E7F510A1ACCD13A3 /* SyntheticSceneTests.swift */,
+			);
+			path = SmartShotCoreTests;
+			sourceTree = "<group>";
+		};
+		4D8AC2D0903C061FE94AC6B5 /* Capture */ = {
+			isa = PBXGroup;
+			children = (
+				FE35DF04529F01936BAD7DDA /* CaptureService.swift */,
+				07B100B3068E06A13594C93A /* CaptureSession.swift */,
+			);
+			path = Capture;
+			sourceTree = "<group>";
+		};
+		53A2B37B0746CBBCFF154CC6 /* tools */ = {
+			isa = PBXGroup;
+			children = (
+				57D32844FF810E9CDCCD1341 /* smartshot-replay */,
+			);
+			path = tools;
+			sourceTree = "<group>";
+		};
+		57D32844FF810E9CDCCD1341 /* smartshot-replay */ = {
+			isa = PBXGroup;
+			children = (
+				C814587AAA4A8D5A65F788E0 /* main.swift */,
+			);
+			path = "smartshot-replay";
+			sourceTree = "<group>";
+		};
+		62C2F2831DA433EAD15335E2 /* SmartShot */ = {
+			isa = PBXGroup;
+			children = (
+				24ADDCC40F5E079648F9D367 /* App */,
+				4D8AC2D0903C061FE94AC6B5 /* Capture */,
+				24A76F4320367CAD0A5B5AB0 /* Settings */,
+				A9F27F488DF97272D07BC08B /* UI */,
+			);
+			path = SmartShot;
+			sourceTree = "<group>";
+		};
+		635A07E89EF3C83831374F9C = {
+			isa = PBXGroup;
+			children = (
+				62C2F2831DA433EAD15335E2 /* SmartShot */,
+				42D786CF29F77607C8AC781D /* SmartShotCore */,
+				46E6E59B19FFF151E0188944 /* SmartShotCoreTests */,
+				53A2B37B0746CBBCFF154CC6 /* tools */,
+				9368DAC11D9D5B5086B88E23 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9368DAC11D9D5B5086B88E23 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DDB6607DD819EDC1399B9B2A /* smartshot-replay */,
+				4DAEFB0A05ED9EEC031DA793 /* SmartShot.app */,
+				18175DECC5D11EF0CE72B293 /* SmartShotCore.framework */,
+				B2EA02B6A75E6D164023864A /* SmartShotCoreTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A9F27F488DF97272D07BC08B /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				E362D2FA057EFC369D514A93 /* MainWindowView.swift */,
+				C4CB7FF8EE7F20F5753CFEDD /* MenuBarView.swift */,
+				2E44A5CB2E966EB18420523F /* SettingsViews.swift */,
+				438CFAF81C94427CEB3649F3 /* TargetPickerView.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8408CE47E42B06D2F08451EA /* smartshot-replay */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FD1D1D6636EB83DE9D78D707 /* Build configuration list for PBXNativeTarget "smartshot-replay" */;
+			buildPhases = (
+				5A149EB74F4ECDD36B5BD09A /* Sources */,
+				613F300E3CF4DBFCFD1931AC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9190BB8DCDBB19154ED89C67 /* PBXTargetDependency */,
+			);
+			name = "smartshot-replay";
+			packageProductDependencies = (
+			);
+			productName = "smartshot-replay";
+			productReference = DDB6607DD819EDC1399B9B2A /* smartshot-replay */;
+			productType = "com.apple.product-type.tool";
+		};
+		B204A4184AA842E69C841717 /* SmartShotCoreTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 326988DD1B01A06EEF12B102 /* Build configuration list for PBXNativeTarget "SmartShotCoreTests" */;
+			buildPhases = (
+				7F6B2295146CB4D431FDEB33 /* Sources */,
+				9C3612314684540FDE1FE7EB /* Frameworks */,
+				D8790CF1BF613C00CD2B67CC /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BE52107021A2069C0A16540A /* PBXTargetDependency */,
+			);
+			name = SmartShotCoreTests;
+			packageProductDependencies = (
+			);
+			productName = SmartShotCoreTests;
+			productReference = B2EA02B6A75E6D164023864A /* SmartShotCoreTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		C89F8BEE719461E1F6C2CAD1 /* SmartShot */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5FC4D402D18C886FB1AA258E /* Build configuration list for PBXNativeTarget "SmartShot" */;
+			buildPhases = (
+				6482BF059814F21C0443D494 /* Sources */,
+				915FB35734EA44FAE6DDC238 /* Frameworks */,
+				ADDB5040EC5FEBBAF56EC4C1 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7F63A72EFA47873187663731 /* PBXTargetDependency */,
+			);
+			name = SmartShot;
+			packageProductDependencies = (
+			);
+			productName = SmartShot;
+			productReference = 4DAEFB0A05ED9EEC031DA793 /* SmartShot.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EB7BF82FE5D6DFE413208AF1 /* SmartShotCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D6F407A198B4FB826988709B /* Build configuration list for PBXNativeTarget "SmartShotCore" */;
+			buildPhases = (
+				A0D69C1F2C4CE84FEA770DB7 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SmartShotCore;
+			packageProductDependencies = (
+			);
+			productName = SmartShotCore;
+			productReference = 18175DECC5D11EF0CE72B293 /* SmartShotCore.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CDD4BEE0B5D6A2BE686F7741 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					8408CE47E42B06D2F08451EA = {
+						DevelopmentTeam = JY5U4D6JD3;
+						ProvisioningStyle = Automatic;
+					};
+					B204A4184AA842E69C841717 = {
+						DevelopmentTeam = JY5U4D6JD3;
+						ProvisioningStyle = Automatic;
+					};
+					C89F8BEE719461E1F6C2CAD1 = {
+						DevelopmentTeam = JY5U4D6JD3;
+						ProvisioningStyle = Automatic;
+					};
+					EB7BF82FE5D6DFE413208AF1 = {
+						DevelopmentTeam = JY5U4D6JD3;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = E8BA76C8E4C8483211EA0BC8 /* Build configuration list for PBXProject "SmartShot" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 635A07E89EF3C83831374F9C;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 9368DAC11D9D5B5086B88E23 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EB7BF82FE5D6DFE413208AF1 /* SmartShotCore */,
+				C89F8BEE719461E1F6C2CAD1 /* SmartShot */,
+				8408CE47E42B06D2F08451EA /* smartshot-replay */,
+				B204A4184AA842E69C841717 /* SmartShotCoreTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5A149EB74F4ECDD36B5BD09A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ADFC8D27E0C665D2E63F67B4 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6482BF059814F21C0443D494 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DF5A274DC8405C5C2226B8A2 /* AppSettings.swift in Sources */,
+				75480D5B34D2102E2347CDAF /* AppState.swift in Sources */,
+				E042A22E93A0F11F7EB60CF5 /* CaptureService.swift in Sources */,
+				7158DC3E7C329817374C1093 /* CaptureSession.swift in Sources */,
+				8044D89767D2C187F158C376 /* MainWindowView.swift in Sources */,
+				6B01FE6DB899D0C968732F15 /* MenuBarView.swift in Sources */,
+				21E0017D69CACF212A80090B /* SettingsViews.swift in Sources */,
+				7053F16415CA0C32C615B3F3 /* SmartShotApp.swift in Sources */,
+				E4891FAE5C7A2037366B28D4 /* TargetPickerView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7F6B2295146CB4D431FDEB33 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2AAAC84FE00BA218321ADC27 /* CoreComponentTests.swift in Sources */,
+				EE7483E5749287E86EC44B05 /* ReplayEquivalenceTests.swift in Sources */,
+				9F8CC2C540911B46CF09410F /* SyntheticSceneTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A0D69C1F2C4CE84FEA770DB7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				94B5522673497A6F11772177 /* CapturePolicy.swift in Sources */,
+				C977316B1D2D898688DE1497 /* CaptureWriter.swift in Sources */,
+				DB8E1B7B9233F5DA7D4C1434 /* DetectionParameters.swift in Sources */,
+				16196B512DDE39A40F2EFDA6 /* EventJournal.swift in Sources */,
+				B2A03FBE72223AFFB17350B7 /* FrameBuffer.swift in Sources */,
+				94FA0BDE0157DEE8B55A04A3 /* GrayConverter.swift in Sources */,
+				90D894B6E46ADEF9B5CFDB47 /* GrayFrame.swift in Sources */,
+				1D0CD5FEF424292BDF7CC37F /* Models.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7F63A72EFA47873187663731 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EB7BF82FE5D6DFE413208AF1 /* SmartShotCore */;
+			targetProxy = E307BDF6C98C57F4B6866833 /* PBXContainerItemProxy */;
+		};
+		9190BB8DCDBB19154ED89C67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EB7BF82FE5D6DFE413208AF1 /* SmartShotCore */;
+			targetProxy = B93E8EE1FEC1165C9305EBAA /* PBXContainerItemProxy */;
+		};
+		BE52107021A2069C0A16540A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EB7BF82FE5D6DFE413208AF1 /* SmartShotCore */;
+			targetProxy = FCE1E4BD1CA8FEFDCE42A2CC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		13D9688488DB392EFCF13D0E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.timmysh34.smartshot.core;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		2E1536B3EA0D7F7DE1BCDBD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = SmartShotCoreTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.timmysh34.smartshot.coretests;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		36A9158712CD56AA22625420 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.timmysh34.smartshot.replay;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		3A9631BDC7680C285C891C23 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_USER_SELECTED_FILE = READWRITE;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Smart Shot";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSMinimumSystemVersion = 14.0;
+				INFOPLIST_KEY_NSHumanReadableCopyright = TimmySheep;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.timmysh34.smartshot;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		939F8B34AEE376862CC71643 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = JY5U4D6JD3;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		A5060368BE987CD25AC245D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.timmysh34.smartshot.core;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		A7A6F6D1CFE93866CBB4464F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_USER_SELECTED_FILE = READWRITE;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Smart Shot";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSMinimumSystemVersion = 14.0;
+				INFOPLIST_KEY_NSHumanReadableCopyright = TimmySheep;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.timmysh34.smartshot;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		B7302D5090C562402D944302 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = SmartShotCoreTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.timmysh34.smartshot.coretests;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		D52F8D3CA588460F0C0BB050 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = JY5U4D6JD3;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FF2A426EC50B0495EDB3AAC7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.timmysh34.smartshot.replay;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		326988DD1B01A06EEF12B102 /* Build configuration list for PBXNativeTarget "SmartShotCoreTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B7302D5090C562402D944302 /* Debug */,
+				2E1536B3EA0D7F7DE1BCDBD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5FC4D402D18C886FB1AA258E /* Build configuration list for PBXNativeTarget "SmartShot" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A7A6F6D1CFE93866CBB4464F /* Debug */,
+				3A9631BDC7680C285C891C23 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D6F407A198B4FB826988709B /* Build configuration list for PBXNativeTarget "SmartShotCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A5060368BE987CD25AC245D5 /* Debug */,
+				13D9688488DB392EFCF13D0E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E8BA76C8E4C8483211EA0BC8 /* Build configuration list for PBXProject "SmartShot" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D52F8D3CA588460F0C0BB050 /* Debug */,
+				939F8B34AEE376862CC71643 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FD1D1D6636EB83DE9D78D707 /* Build configuration list for PBXNativeTarget "smartshot-replay" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36A9158712CD56AA22625420 /* Debug */,
+				FF2A426EC50B0495EDB3AAC7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CDD4BEE0B5D6A2BE686F7741 /* Project object */;
+}

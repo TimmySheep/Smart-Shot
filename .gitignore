@@ -1,0 +1,12 @@
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcscmblueprint
+
+# 系统
+.DS_Store
+
+# 构建产物不入库（build/ 下的 .app/.framework 由 xcodebuild 生成）
+build/
