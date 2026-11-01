@@ -76,8 +76,8 @@ Per-shot metadata (SHA-256, trigger reason, latency, capture size, effective par
 
 ## 已知限制 / Known limitations
 
-- **细小笔迹可能漏检**：`prefilterBits = 8000`（约 1000 像素差异）是研究选定的折中；合成场景已固化"细笔画漏检"这一行为。需要更灵敏时，在「设置 → 高级」里调低一级预筛阈值（如 8000 → 5000）。
-  **Very thin strokes may be missed**: the 8000-bit prefilter (≈1000 changed pixels) is a deliberate trade-off; a synthetic test pins this behavior. For higher sensitivity, lower the prefilter threshold under Settings → Advanced (e.g. 8000 → 5000).
+- **细小笔迹可能漏检**：`prefilterBits = 8000`（约 1000 像素差异）是研究选定的折中；合成场景已固化"细笔画漏检"这一行为。需要更灵敏时，在「设置 → 灵敏度」选「敏感」（5000/12/1500），或到「高级」里手工调低一级预筛阈值。
+  **Very thin strokes may be missed**: the 8000-bit prefilter (≈1000 changed pixels) is a deliberate trade-off; a synthetic test pins this behavior. For higher sensitivity, pick the "sensitive" preset (5000/12/1500) in Settings, or lower the prefilter threshold manually under Advanced.
 - **分辨率与帧率是阈值前提**：320×180 灰度、1 fps 下标定；改检测帧率会改变行为，UI 中标注为实验性。
   **Resolution and frame rate are part of the calibration**: thresholds assume 320×180 grayscale at 1 fps; higher detection rates are marked experimental.
 - 连续动态画面（如视频）走实验性采样路径，研究未覆盖。

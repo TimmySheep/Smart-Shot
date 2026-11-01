@@ -55,7 +55,12 @@ public final class AppSettings: ObservableObject {
     @Published public var detectionFPS: Double { didSet { d.set(detectionFPS, forKey: K.detectionFPS) } }
     @Published public var cooldownSeconds: Double { didSet { d.set(cooldownSeconds, forKey: K.cooldownSeconds) } }
     /// 灵敏度预设：0=保守 1=标准（研究冻结） 2=敏感
-    @Published public var sensitivity: Int { didSet { d.set(sensitivity, forKey: K.sensitivity) } }
+    @Published public var sensitivity: Int {
+        didSet {
+            d.set(sensitivity, forKey: K.sensitivity)
+            applySensitivityPreset()
+        }
+    }
     @Published public var dynamicEnabled: Bool { didSet { d.set(dynamicEnabled, forKey: K.dynamicEnabled) } }
     @Published public var dynamicSampleSeconds: Double { didSet { d.set(dynamicSampleSeconds, forKey: K.dynamicSampleSeconds) } }
 
@@ -117,15 +122,34 @@ public final class AppSettings: ObservableObject {
         d.set(t?.pixelHeight, forKey: K.targetH)
     }
 
+    /// 灵敏度预设对应的阈值（研究冻结配置：标准 8000/20/3000）。
+    public static func sensitivityPreset(_ level: Int) -> (prefilterBits: Int, regionPeak: Int, pagePixels: Int) {
+        switch level {
+        case 0:  return (15000, 60, 3000)
+        case 2:  return (5000, 12, 1500)
+        default: return (8000, 20, 3000)
+        }
+    }
+
+    /// 把预设写进高级字段。
+    ///
+    /// 必须写入：`makeParameters()` 最后会用高级字段覆盖预设值，若不同步，
+    /// 切换灵敏度对检测参数毫无影响（0.2.1 及更早的实际行为）。
+    private func applySensitivityPreset() {
+        let p = Self.sensitivityPreset(sensitivity)
+        prefilterBits = p.prefilterBits
+        regionPeak = p.regionPeak
+        pagePixels = p.pagePixels
+    }
+
     /// 按灵敏度预设/高级覆盖合成检测参数。
     public func makeParameters() -> DetectionParameters {
         var p = DetectionParameters()
-        switch sensitivity {
-        case 0:  p.prefilterBits = 15000; p.regionPeak = 60
-        case 2:  p.prefilterBits = 5000;  p.regionPeak = 12; p.pagePixels = 1500
-        default: p.prefilterBits = 8000;  p.regionPeak = 20; p.pagePixels = 3000
-        }
-        // 高级面板覆盖（若用户改过）
+        let preset = Self.sensitivityPreset(sensitivity)
+        p.prefilterBits = preset.prefilterBits
+        p.regionPeak = preset.regionPeak
+        p.pagePixels = preset.pagePixels
+        // 高级面板覆盖（允许在预设基础上手工微调）
         p.prefilterBits = prefilterBits
         p.regionPeak = regionPeak
         p.pagePixels = pagePixels
