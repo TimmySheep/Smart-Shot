@@ -27,6 +27,12 @@ struct MenuBarView: View {
             Text("未在运行")
         }
         Divider()
+        Button("打开保存文件夹") {
+            let root = AppSettings.shared.makeWriter().smartShotRoot
+            try? FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+            NSWorkspace.shared.open(root)
+        }
+        Divider()
         Picker("模式", selection: $settings.mode) {
             Text("智能").tag(CaptureMode.smart)
             Text("定时").tag(CaptureMode.timed)

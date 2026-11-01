@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0C433A58A51693B71C9311F2 /* SmartShotCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18175DECC5D11EF0CE72B293 /* SmartShotCore.framework */; };
 		16196B512DDE39A40F2EFDA6 /* EventJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6CEBE04D9254242BBA1B55F /* EventJournal.swift */; };
+		18A79A9B1A1399742F4177D5 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E95E30FC9D7AE63BB518F0C /* Theme.swift */; };
 		1D0CD5FEF424292BDF7CC37F /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6551C547FC32D5C0C6F60943 /* Models.swift */; };
 		21E0017D69CACF212A80090B /* SettingsViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E44A5CB2E966EB18420523F /* SettingsViews.swift */; };
 		2AAAC84FE00BA218321ADC27 /* CoreComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB74EB4E21C6C5A4F06B0319 /* CoreComponentTests.swift */; };
@@ -25,6 +26,7 @@
 		94FA0BDE0157DEE8B55A04A3 /* GrayConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FCDB1E378C5B88105F8B1B /* GrayConverter.swift */; };
 		9F8CC2C540911B46CF09410F /* SyntheticSceneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847662D2E7F510A1ACCD13A3 /* SyntheticSceneTests.swift */; };
 		A1935F6D09CA7059E75986F2 /* SmartShotCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18175DECC5D11EF0CE72B293 /* SmartShotCore.framework */; };
+		AB8CA502837C47F92009ADBE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F4FB6B171C5FA0451EB259C /* Assets.xcassets */; };
 		ADFC8D27E0C665D2E63F67B4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C814587AAA4A8D5A65F788E0 /* main.swift */; };
 		B2A03FBE72223AFFB17350B7 /* FrameBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFFB97CCD294BB54B02BFFB /* FrameBuffer.swift */; };
 		C977316B1D2D898688DE1497 /* CaptureWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF1333359F9C1B5C62D2E3B /* CaptureWriter.swift */; };
@@ -95,6 +97,8 @@
 		438CFAF81C94427CEB3649F3 /* TargetPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetPickerView.swift; sourceTree = "<group>"; };
 		47E5B4711FB6483C9ECB038D /* CapturePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturePolicy.swift; sourceTree = "<group>"; };
 		4DAEFB0A05ED9EEC031DA793 /* SmartShot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmartShot.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5E95E30FC9D7AE63BB518F0C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		5F4FB6B171C5FA0451EB259C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6551C547FC32D5C0C6F60943 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		847662D2E7F510A1ACCD13A3 /* SyntheticSceneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyntheticSceneTests.swift; sourceTree = "<group>"; };
 		97AEEB33F9D9C5805569EB85 /* GrayFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrayFrame.swift; sourceTree = "<group>"; };
@@ -210,6 +214,7 @@
 		62C2F2831DA433EAD15335E2 /* SmartShot */ = {
 			isa = PBXGroup;
 			children = (
+				5F4FB6B171C5FA0451EB259C /* Assets.xcassets */,
 				24ADDCC40F5E079648F9D367 /* App */,
 				4D8AC2D0903C061FE94AC6B5 /* Capture */,
 				24A76F4320367CAD0A5B5AB0 /* Settings */,
@@ -247,6 +252,7 @@
 				C4CB7FF8EE7F20F5753CFEDD /* MenuBarView.swift */,
 				2E44A5CB2E966EB18420523F /* SettingsViews.swift */,
 				438CFAF81C94427CEB3649F3 /* TargetPickerView.swift */,
+				5E95E30FC9D7AE63BB518F0C /* Theme.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -298,6 +304,7 @@
 			buildConfigurationList = 5FC4D402D18C886FB1AA258E /* Build configuration list for PBXNativeTarget "SmartShot" */;
 			buildPhases = (
 				6482BF059814F21C0443D494 /* Sources */,
+				80E0CA3E92F28480262C4C51 /* Resources */,
 				915FB35734EA44FAE6DDC238 /* Frameworks */,
 				ADDB5040EC5FEBBAF56EC4C1 /* Embed Frameworks */,
 			);
@@ -379,6 +386,17 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		80E0CA3E92F28480262C4C51 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB8CA502837C47F92009ADBE /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		5A149EB74F4ECDD36B5BD09A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -401,6 +419,7 @@
 				21E0017D69CACF212A80090B /* SettingsViews.swift in Sources */,
 				7053F16415CA0C32C615B3F3 /* SmartShotApp.swift in Sources */,
 				E4891FAE5C7A2037366B28D4 /* TargetPickerView.swift in Sources */,
+				18A79A9B1A1399742F4177D5 /* Theme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -506,6 +525,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_USER_SELECTED_FILE = READWRITE;
@@ -513,7 +533,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Smart Shot";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSMinimumSystemVersion = 14.0;
-				INFOPLIST_KEY_NSHumanReadableCopyright = TimmySheep;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 TimmySheep";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -560,7 +580,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = JY5U4D6JD3;
@@ -576,7 +596,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -614,6 +634,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_USER_SELECTED_FILE = READWRITE;
@@ -621,7 +642,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Smart Shot";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSMinimumSystemVersion = 14.0;
-				INFOPLIST_KEY_NSHumanReadableCopyright = TimmySheep;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 TimmySheep";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -684,7 +705,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = JY5U4D6JD3;
@@ -706,7 +727,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

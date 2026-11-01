@@ -83,7 +83,12 @@ final class AppState: ObservableObject {
             let journal = try EventJournal(directory: writer.smartShotRoot)
             self.journal = journal
             let session = CaptureSession(target: target, mode: settings.mode, params: params,
-                                         writer: writer, journal: journal)
+                                         writer: writer, journal: journal,
+                                         appVersion: writer.appVersion)
+            // 目标被重新解析（窗口重建）或实时像素尺寸与旧记录不同：回写设置，保证下次启动与界面显示一致。
+            session.onTargetResolved = { resolved in
+                Task { @MainActor in AppSettings.shared.saveTarget(resolved) }
+            }
             session.onFatalWriteError = { [weak self] error in
                 DispatchQueue.main.async {
                     self?.recentShots = self?.recentShots ?? []

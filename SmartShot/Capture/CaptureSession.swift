@@ -21,6 +21,9 @@ public struct SessionStatus: Sendable {
     public var bufferUsedBytes: Int = 0
     public var bufferEntries: Int = 0
     public var dynamicMode = false
+    /// 实际采集像素尺寸（首帧后填充）。
+    public var captureWidth: Int = 0
+    public var captureHeight: Int = 0
 
     public var uptime: TimeInterval {
         guard let startedAt else { return 0 }
@@ -38,7 +41,8 @@ public final class CaptureSession: ObservableObject {
     @Published public private(set) var status = SessionStatus()
 
     public let params: DetectionParameters
-    public let target: CaptureTargetID
+    /// 实际使用的目标；窗口 ID 失效被重新解析后会更新为新窗口及其实时像素尺寸。
+    public private(set) var target: CaptureTargetID
     public let writer: CaptureWriter
     public let journal: EventJournal
     public let mode: CaptureMode
@@ -50,10 +54,14 @@ public final class CaptureSession: ObservableObject {
     private let writerQueue = DispatchQueue(label: "com.smartshot.session.writer", qos: .utility)
     private var targetWatchTimer: DispatchSourceTimer?
     private var lastTimedSaveT: TimeInterval = -.greatestFiniteMagnitude
+    private var lastFrameArrivalT: TimeInterval?
+    private var stallReported = false
     private let appVersion: String
 
     /// 写入失败后的停止回调（磁盘满等致命错误）。
     public var onFatalWriteError: ((Error) -> Void)?
+    /// 启动后目标被重新解析（窗口重建/实时像素尺寸与旧记录不同）时回调，用于回写设置。
+    public var onTargetResolved: ((CaptureTargetID) -> Void)?
 
     public init(target: CaptureTargetID, mode: CaptureMode, params: DetectionParameters,
                 writer: CaptureWriter, journal: EventJournal, appVersion: String = "0.1.0") {
@@ -78,15 +86,32 @@ public final class CaptureSession: ObservableObject {
 
     public func start() {
         guard status.phase == .idle || status.phase == .error else { return }
-        journal.append(JournalEvent(kind: .sessionStart, timestamp: Date().timeIntervalSince1970,
-                                    message: "会话开始：\(mode == .smart ? "智能" : "定时")模式，目标 \(target.displayName)",
-                                    data: ["mode": mode.rawValue, "target": target.displayName]))
+        let requested = target
+        let resolved: CaptureTargetID
         do {
-            try captureService.start(target: target, fps: params.detectionFPS)
+            resolved = try captureService.start(target: requested, fps: params.detectionFPS)
         } catch {
+            journal.append(JournalEvent(kind: .sessionStart, timestamp: Date().timeIntervalSince1970,
+                                        message: "会话开始失败：\(mode == .smart ? "智能" : "定时")模式，目标 \(requested.displayName)",
+                                        data: ["mode": mode.rawValue, "target": requested.displayName]))
             fail(error)
             return
         }
+        self.target = resolved
+
+        journal.append(JournalEvent(kind: .sessionStart, timestamp: Date().timeIntervalSince1970,
+                                    message: "会话开始：\(mode == .smart ? "智能" : "定时")模式，"
+                                           + "目标 \(resolved.displayName)（\(resolved.pixelWidth)×\(resolved.pixelHeight) 像素）",
+                                    data: ["mode": mode.rawValue, "target": resolved.displayName,
+                                           "captureWidth": String(resolved.pixelWidth),
+                                           "captureHeight": String(resolved.pixelHeight)]))
+        if resolved.id != requested.id
+            || resolved.pixelWidth != requested.pixelWidth
+            || resolved.pixelHeight != requested.pixelHeight {
+            let callback = onTargetResolved
+            DispatchQueue.main.async { callback?(resolved) }
+        }
+
         policy.reset()
         buffer.removeAll()
         captureService.onFrame = { [weak self] pb, ts in
@@ -97,12 +122,15 @@ public final class CaptureSession: ObservableObject {
         }
 
         let startInfo = SessionStatus()
+        let captureW = resolved.pixelWidth, captureH = resolved.pixelHeight
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.status = startInfo
             self.status.phase = .running
             self.status.startedAt = Date()
             self.status.detectionState = self.mode == .smart ? "检测中" : "定时"
+            self.status.captureWidth = captureW
+            self.status.captureHeight = captureH
         }
         startTargetWatch()
     }
@@ -139,6 +167,19 @@ public final class CaptureSession: ObservableObject {
     private func processFrame(_ pb: CVPixelBuffer, _ ts: TimeInterval) {
         guard status.phase == .running || status.phase == .stopping else { return }
         let t0 = DispatchTime.now()
+        lastFrameArrivalT = CACurrentMediaTime()
+        stallReported = false
+
+        // 首帧后回读真实采集尺寸，仅用于状态展示（真正的尺寸已在 start() 由实时几何确定，
+        // 这里不在采集队列上改写 target，避免与写入队列竞争）。
+        if let actual = captureService.captureSize,
+           actual.width != status.captureWidth || actual.height != status.captureHeight {
+            let w = actual.width, h = actual.height
+            DispatchQueue.main.async {
+                self.status.captureWidth = w
+                self.status.captureHeight = h
+            }
+        }
 
         guard let gray = GrayConverter.convert(pb, targetWidth: params.analysisWidth,
                                                targetHeight: params.analysisHeight) else {
@@ -149,7 +190,7 @@ public final class CaptureSession: ObservableObject {
 
         // 定时模式：不跑检测，按间隔保存（统一使用帧时间戳，host time 域）
         if mode == .timed {
-            buffer.append(pb, timestamp: ts)
+            if let copy = Self.copyPixelBuffer(pb) { buffer.append(copy, timestamp: ts) }
             if status.savedCount == 0 || ts - lastTimedSaveT >= params.timedIntervalSeconds {
                 lastTimedSaveT = ts
                 if let entry = buffer.frame(atOrBefore: ts) {
@@ -164,7 +205,14 @@ public final class CaptureSession: ObservableObject {
 
         // 智能模式：先检测，再决定是否入缓冲
         let actions = policy.step(t: ts, frame: gray)
-        buffer.append(pb, timestamp: ts)
+        // 必须入缓冲自己的副本：直接持有 SCK 的像素缓冲会占满采集池（queueDepth），
+        // 流会在几帧后无声停摆（心跳也随之停止），表现为“画面变了但不再截图”。
+        if let copy = Self.copyPixelBuffer(pb) {
+            buffer.append(copy, timestamp: ts)
+        } else {
+            journal.append(JournalEvent(kind: .runtime, timestamp: ts,
+                                        message: "帧复制失败（本帧不入缓冲，检测结果仍生效）"))
+        }
 
         for action in actions {
             switch action {
@@ -244,13 +292,56 @@ public final class CaptureSession: ObservableObject {
         }
     }
 
+    // MARK: - 帧复制
+
+    /// 把 SCK 交付的像素缓冲复制成自己的 CVPixelBuffer。
+    ///
+    /// ScreenCaptureKit 的缓冲来自有限池；长期持有会把池耗尽、流静默停摆。
+    /// 复制后原始缓冲随采样回调返回即可被回收。
+    static func copyPixelBuffer(_ pb: CVPixelBuffer) -> CVPixelBuffer? {
+        let width = CVPixelBufferGetWidth(pb)
+        let height = CVPixelBufferGetHeight(pb)
+        let format = CVPixelBufferGetPixelFormatType(pb)
+        var dst: CVPixelBuffer?
+        let attrs: [CFString: Any] = [kCVPixelBufferPixelFormatTypeKey: format]
+        guard CVPixelBufferCreate(kCFAllocatorDefault, width, height, format,
+                                  attrs as CFDictionary, &dst) == kCVReturnSuccess,
+              let dst else { return nil }
+
+        CVPixelBufferLockBaseAddress(pb, .readOnly)
+        CVPixelBufferLockBaseAddress(dst, [])
+        defer {
+            CVPixelBufferUnlockBaseAddress(dst, [])
+            CVPixelBufferUnlockBaseAddress(pb, .readOnly)
+        }
+        guard let srcBase = CVPixelBufferGetBaseAddress(pb),
+              let dstBase = CVPixelBufferGetBaseAddress(dst) else { return nil }
+        let srcRow = CVPixelBufferGetBytesPerRow(pb)
+        let dstRow = CVPixelBufferGetBytesPerRow(dst)
+        let copyBytes = min(srcRow, dstRow)
+        for y in 0..<height {
+            memcpy(dstBase.advanced(by: y * dstRow), srcBase.advanced(by: y * srcRow), copyBytes)
+        }
+        return dst
+    }
+
     // MARK: - 巡检与统计
 
     private func startTargetWatch() {
         let timer = DispatchSource.makeTimerSource(queue: captureQueue)
         timer.schedule(deadline: .now() + 5, repeating: 5)
         timer.setEventHandler { [weak self] in
-            guard let self, self.status.phase == .running, self.target.kind == .window else { return }
+            guard let self, self.status.phase == .running else { return }
+            // 采集流停摆检测：心跳依赖帧到达，帧断了会静默失去保底，必须记账。
+            if let last = self.lastFrameArrivalT,
+               CACurrentMediaTime() - last > 5, !self.stallReported {
+                self.stallReported = true
+                self.journal.append(JournalEvent(
+                    kind: .runtime, timestamp: Date().timeIntervalSince1970,
+                    message: String(format: "已 %.0f 秒未收到采集帧（采集流可能停摆）",
+                                    CACurrentMediaTime() - last)))
+            }
+            guard self.target.kind == .window else { return }
             Task {
                 let exists = await CaptureService.targetStillExists(self.target)
                 if !exists {

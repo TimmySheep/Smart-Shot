@@ -7,7 +7,6 @@ struct MainWindowView: View {
     @ObservedObject var settings = AppSettings.shared
     @State private var showPicker = false
     @State private var showHistory = false
-    @State private var showSettings = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -17,24 +16,22 @@ struct MainWindowView: View {
             Divider()
             modeSection
             Divider()
-            statusSection
+            saveSection
             Divider()
+            statusSection
             if !ScreenPermission.isGranted {
                 permissionBanner
-                Divider()
             }
             if let err = appState.session?.status.lastError {
                 errorBanner(err)
-                Divider()
             }
             actionsSection
             Divider()
             recentEvents
         }
-        .frame(width: 440, height: 640)
+        .frame(minWidth: 420, idealWidth: 440, minHeight: 640, idealHeight: 680)
         .sheet(isPresented: $showPicker) { TargetPickerView() }
         .sheet(isPresented: $showHistory) { HistoryView() }
-        .sheet(isPresented: $showSettings) { SettingsView() }
     }
 
     // MARK: - 头部
@@ -42,18 +39,26 @@ struct MainWindowView: View {
     private var header: some View {
         HStack(spacing: 10) {
             Image(nsImage: NSImage(named: NSImage.applicationIconName) ?? NSImage())
-                .resizable().frame(width: 32, height: 32)
+                .resizable().frame(width: 34, height: 34)
             VStack(alignment: .leading, spacing: 1) {
-                Text("Smart Shot").font(.headline)
-                Text("实验性智能截图").font(.caption2).foregroundStyle(.secondary)
+                Text("实验性智能截图").font(.callout.weight(.semibold))
+                Text("本地检测 · 不上传屏幕内容")
+                    .font(.caption).foregroundStyle(.secondary)
             }
             Spacer()
             Button { showHistory = true } label: { Image(systemName: "clock") }
                 .buttonStyle(.borderless).help("截图历史")
-            Button { showSettings = true } label: { Image(systemName: "gearshape") }
+                .accessibilityLabel("截图历史")
+            Button { openSettings() } label: { Image(systemName: "gearshape") }
                 .buttonStyle(.borderless).help("设置")
+                .accessibilityLabel("设置")
         }
-        .padding(.horizontal, 16).padding(.vertical, 10)
+        .sectionStyle()
+    }
+
+    private func openSettings() {
+        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     // MARK: - 目标
@@ -67,6 +72,7 @@ struct MainWindowView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(settings.savedTarget?.displayName ?? "未选择")
                         .font(.callout)
+                        .foregroundStyle(settings.savedTarget == nil ? .secondary : .primary)
                         .lineLimit(1).truncationMode(.middle)
                     if let t = settings.savedTarget {
                         Text("\(t.pixelWidth)×\(t.pixelHeight) · \(t.kind == .display ? "显示器" : "窗口")")
@@ -78,7 +84,7 @@ struct MainWindowView: View {
                     .disabled(appState.isRunning)
             }
         }
-        .padding(.horizontal, 16).padding(.vertical, 10)
+        .sectionStyle()
     }
 
     private var targetIcon: String {
@@ -89,78 +95,124 @@ struct MainWindowView: View {
 
     private var modeSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Picker("模式", selection: $settings.mode) {
-                Text("智能").tag(CaptureMode.smart)
-                Text("定时").tag(CaptureMode.timed)
-            }
-            .pickerStyle(.segmented)
-            .disabled(appState.isRunning)
-
-            if settings.mode == .smart {
-                Picker("保底间隔", selection: $settings.heartbeatSeconds) {
-                    ForEach([10.0, 15.0, 30.0, 60.0], id: \.self) { s in
-                        Text("\(Int(s)) 秒").tag(s)
+            Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 8) {
+                GridRow {
+                    Text("模式").font(.callout)
+                    Picker("", selection: $settings.mode) {
+                        Text("智能").tag(CaptureMode.smart)
+                        Text("定时").tag(CaptureMode.timed)
                     }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                    .disabled(appState.isRunning)
                 }
-                .disabled(appState.isRunning)
+                GridRow {
+                    Text(settings.mode == .smart ? "保底间隔" : "截图间隔").font(.callout)
+                    Picker("", selection: intervalBinding) {
+                        ForEach([10.0, 15.0, 30.0, 60.0], id: \.self) { s in
+                            Text("\(Int(s)) 秒").tag(s)
+                        }
+                    }
+                    .labelsHidden()
+                    .disabled(appState.isRunning)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            if settings.mode == .smart {
                 Text("检测器长时间未触发时的兜底保存间隔。智能检测为实验性功能，短间隔更稳妥。")
                     .font(.caption2).foregroundStyle(.secondary)
-            } else {
-                Picker("截图间隔", selection: $settings.timedIntervalSeconds) {
-                    ForEach([10.0, 15.0, 30.0, 60.0], id: \.self) { s in
-                        Text("\(Int(s)) 秒").tag(s)
-                    }
-                }
-                .disabled(appState.isRunning)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .padding(.horizontal, 16).padding(.vertical, 10)
+        .sectionStyle()
+    }
+
+    private var intervalBinding: Binding<Double> {
+        settings.mode == .smart ? $settings.heartbeatSeconds : $settings.timedIntervalSeconds
+    }
+
+    // MARK: - 保存位置
+
+    private var saveSection: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "folder")
+                .foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 1) {
+                Text("保存位置").font(.caption).foregroundStyle(.secondary)
+                Text(saveRoot.tildePath)
+                    .font(.callout)
+                    .lineLimit(1).truncationMode(.middle)
+                    .help(saveRoot.path)
+            }
+            Spacer()
+            Button("在访达中显示") { revealSaveFolder() }
+                .font(.caption)
+        }
+        .sectionStyle()
+    }
+
+    private var saveRoot: URL { settings.makeWriter().smartShotRoot }
+
+    private func revealSaveFolder() {
+        try? FileManager.default.createDirectory(at: saveRoot, withIntermediateDirectories: true)
+        NSWorkspace.shared.open(saveRoot)
     }
 
     // MARK: - 状态
 
     private var statusSection: some View {
         let status = appState.session?.status
-        return VStack(alignment: .leading, spacing: 6) {
+        return VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text("状态").font(.caption).foregroundStyle(.secondary)
-                Spacer()
                 statusDot
+                Spacer()
+                Text(uptimeText(status))
+                    .font(.callout.monospacedDigit())
+                    .foregroundStyle(.secondary)
             }
             Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 4) {
                 GridRow {
-                    Text("已运行").font(.caption).foregroundStyle(.secondary)
-                    Text(formatUptime(status?.uptime ?? 0)).font(.caption.monospacedDigit())
-                }
-                GridRow {
                     Text("已保存").font(.caption).foregroundStyle(.secondary)
-                    Text("\(status?.savedCount ?? 0) 张").font(.caption.monospacedDigit())
+                    Text("\(status?.savedCount ?? 0) 张").font(.callout.monospacedDigit())
                 }
                 GridRow {
                     Text("最近截图").font(.caption).foregroundStyle(.secondary)
                     Text(status?.lastSaveAt.map(Self.timeFormatter.string(from:)) ?? "—")
-                        .font(.caption.monospacedDigit())
+                        .font(.callout.monospacedDigit())
                 }
                 GridRow {
                     Text("触发原因").font(.caption).foregroundStyle(.secondary)
                     Text(reasonText(status?.lastSaveReason, detail: status?.lastSaveDetail))
-                        .font(.caption).lineLimit(1)
+                        .font(.callout).lineLimit(1)
                 }
                 GridRow {
                     Text("检测").font(.caption).foregroundStyle(.secondary)
-                    Text(detectionText(status)).font(.caption)
+                    Text(detectionText(status)).font(.callout).lineLimit(1)
                 }
             }
         }
-        .padding(.horizontal, 16).padding(.vertical, 10)
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: Theme.cardRadius)
+                .fill(Color.primary.opacity(0.045))
+        )
+        .sectionStyle()
+    }
+
+    private func uptimeText(_ status: SessionStatus?) -> String {
+        guard let status, status.startedAt != nil else { return "—" }
+        return formatUptime(status.uptime)
     }
 
     private var statusDot: some View {
         let phase = appState.session?.status.phase ?? .idle
         let color: Color = phase == .running ? .green : (phase == .error ? .red : .gray)
-        return HStack(spacing: 4) {
-            Circle().fill(color).frame(width: 7, height: 7)
-            Text(phaseLabel(phase)).font(.caption).foregroundStyle(.secondary)
+        return HStack(spacing: 5) {
+            Circle().fill(color).frame(width: 8, height: 8)
+            Text(phaseLabel(phase))
+                .font(.callout.weight(.medium))
+                .foregroundStyle(phase == .error ? .red : .primary)
         }
     }
 
@@ -215,9 +267,7 @@ struct MainWindowView: View {
                 Button("请求权限") { ScreenPermission.request() }
             }
         }
-        .padding(.horizontal, 16).padding(.vertical, 8)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.orange.opacity(0.08))
+        .bannerStyle(.orange)
     }
 
     private func errorBanner(_ message: String) -> some View {
@@ -226,9 +276,7 @@ struct MainWindowView: View {
                 .font(.callout).foregroundStyle(.red)
             Text(message).font(.caption).foregroundStyle(.secondary)
         }
-        .padding(.horizontal, 16).padding(.vertical, 8)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.red.opacity(0.08))
+        .bannerStyle(.red)
     }
 
     // MARK: - 操作
@@ -243,6 +291,7 @@ struct MainWindowView: View {
             }
             .controlSize(.large)
             .buttonStyle(.borderedProminent)
+            .keyboardShortcut(.defaultAction)
             .disabled(!appState.canStart && !appState.isRunning)
 
             Button {
@@ -253,8 +302,9 @@ struct MainWindowView: View {
             .controlSize(.large)
             .disabled(!appState.isRunning)
             .help("立即保存一张")
+            .accessibilityLabel("立即保存一张")
         }
-        .padding(.horizontal, 16).padding(.vertical, 10)
+        .sectionStyle()
     }
 
     // MARK: - 最近事件
@@ -267,12 +317,14 @@ struct MainWindowView: View {
                 Button("全部历史…") { showHistory = true }
                     .buttonStyle(.borderless).font(.caption)
             }
-            .padding(.horizontal, 16).padding(.vertical, 6)
+            .padding(.horizontal, Theme.hPadding).padding(.vertical, 6)
             Divider()
             if appState.recentShots.isEmpty {
-                Text("暂无截图")
-                    .font(.caption).foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                EmptyStateView(
+                    systemImage: "camera.on.rectangle",
+                    title: "暂无截图",
+                    subtitle: "开始截图后，最近保存的记录会显示在这里"
+                )
             } else {
                 ScrollView {
                     LazyVStack(spacing: 0) {
@@ -300,36 +352,29 @@ struct MainWindowView: View {
     }
 }
 
-/// 历史列表的一行。
+/// 历史列表的一行（缩略图异步加载）。
 struct ShotRowView: View {
     let item: ShotHistoryItem
 
     var body: some View {
-        HStack(spacing: 8) {
-            Image(systemName: iconName)
-                .foregroundStyle(.secondary).frame(width: 14)
-            VStack(alignment: .leading, spacing: 1) {
-                Text(item.filename).font(.caption).lineLimit(1).truncationMode(.middle)
-                Text(item.reasonLabel).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+        Button {
+            item.revealInFinder()
+        } label: {
+            HStack(spacing: 8) {
+                ThumbnailView(url: item.fileURL, size: CGSize(width: 40, height: 26))
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(item.filename).font(.caption).lineLimit(1).truncationMode(.middle)
+                    Text(item.reasonLabel).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                }
+                Spacer()
+                Text(MainWindowView.timeFormatter.string(from: item.date))
+                    .font(.caption2.monospacedDigit()).foregroundStyle(.secondary)
             }
-            Spacer()
-            Text(MainWindowView.timeFormatter.string(from: item.date))
-                .font(.caption2.monospacedDigit()).foregroundStyle(.secondary)
         }
-        .padding(.horizontal, 16).padding(.vertical, 4)
-        .contentShape(Rectangle())
-        .onTapGesture { item.revealInFinder() }
+        .buttonStyle(.plain)
+        .padding(.horizontal, Theme.hPadding).padding(.vertical, 5)
         .help("点击在访达中显示")
-    }
-
-    private var iconName: String {
-        switch item.reason {
-        case .heartbeat: return "timer"
-        case .timed: return "clock"
-        case .smartChange: return "sparkles"
-        case .blipRescue: return "bolt"
-        case .manual: return "hand.tap"
-        default: return "camera"
-        }
+        .accessibilityLabel("\(item.filename)，\(item.reasonLabel)，\(MainWindowView.timeFormatter.string(from: item.date))")
+        .accessibilityHint("在访达中显示此截图")
     }
 }

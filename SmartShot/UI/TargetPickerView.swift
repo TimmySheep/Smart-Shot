@@ -23,7 +23,7 @@ struct TargetPickerView: View {
                     Section("显示器") {
                         ForEach(targets.displays) { d in
                             targetRow(kind: .display, id: d.id, title: d.name,
-                                      subtitle: "\(d.width)×\(d.height)",
+                                      subtitle: "\(d.width)×\(d.height) 像素",
                                       app: nil, appName: nil, window: nil,
                                       w: d.width, h: d.height)
                         }
@@ -35,9 +35,12 @@ struct TargetPickerView: View {
                         ForEach(targets.windows) { w in
                             targetRow(kind: .window, id: w.id,
                                       title: w.windowTitle.isEmpty ? "(无标题)" : w.windowTitle,
-                                      subtitle: "\(w.width)×\(w.height)",
+                                      subtitle: "\(w.width)×\(w.height) 像素 · \(w.pointWidth)×\(w.pointHeight) 点",
                                       app: w.appBundleID, appName: w.appName, window: w,
-                                      w: w.width, h: w.height)
+                                      w: w.width, h: w.height,
+                                      warning: w.looksAuxiliary
+                                          ? "窗口过小，可能是工具条或浮层，通常不是要录的目标"
+                                          : nil)
                         }
                     }
                 }
@@ -57,8 +60,8 @@ struct TargetPickerView: View {
 
     private var permissionBanner: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("需要屏幕录制权限", systemImage: "exclamationmark.shield")
-                .font(.headline)
+            Label("需要屏幕录制权限", systemImage: "exclamationmark.shield.fill")
+                .font(.callout).foregroundStyle(.orange)
             Text("Smart Shot 需要屏幕录制权限才能读取屏幕内容。授予后请点击“刷新”。")
                 .font(.caption).foregroundStyle(.secondary)
             HStack {
@@ -68,14 +71,12 @@ struct TargetPickerView: View {
                 Button("请求权限") { ScreenPermission.request() }
             }
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.yellow.opacity(0.15))
+        .bannerStyle(.orange)
     }
 
     private func targetRow(kind: CaptureTargetKind, id: UInt32, title: String, subtitle: String,
                            app: String?, appName: String?, window: AvailableTargets.WindowInfo?,
-                           w: Int, h: Int) -> some View {
+                           w: Int, h: Int, warning: String? = nil) -> some View {
         let target = CaptureTargetID(kind: kind, id: id, appBundleID: app, appName: appName,
                                      windowTitle: window?.windowTitle, pixelWidth: w, pixelHeight: h)
         let selected = settings.savedTarget?.kind == kind && settings.savedTarget?.id == id
@@ -97,6 +98,11 @@ struct TargetPickerView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(appName ?? title).font(.body)
                     Text(subtitle).font(.caption).foregroundStyle(.secondary)
+                    if let warning {
+                        Label(warning, systemImage: "exclamationmark.triangle.fill")
+                            .font(.caption2)
+                            .foregroundStyle(.orange)
+                    }
                 }
                 Spacer()
                 if selected {

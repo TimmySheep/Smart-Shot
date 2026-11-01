@@ -32,10 +32,15 @@ public struct AvailableTargets: Sendable {
         public let appBundleID: String?
         public let appName: String
         public let windowTitle: String
-        public let width: Int
+        public let width: Int          // 像素（Retina 感知）
         public let height: Int
+        public let pointWidth: Int     // 点（用户可见尺寸）
+        public let pointHeight: Int
         public let onScreen: Bool
         public let scWindow: SCWindow
+
+        /// 过小的窗口多为工具条、浮层或辅助窗，通常不是想录的目标。
+        public var looksAuxiliary: Bool { pointWidth < 320 || pointHeight < 240 }
     }
     public var displays: [DisplayInfo]
     public var windows: [WindowInfo]
@@ -58,16 +63,39 @@ public struct AvailableTargets: Sendable {
                 return Bundle.main.bundleIdentifier == nil
                     || w.owningApplication?.bundleIdentifier != Bundle.main.bundleIdentifier
             }
-            .map { w in
-                WindowInfo(id: w.windowID,
-                           appBundleID: w.owningApplication?.bundleIdentifier,
-                           appName: w.owningApplication?.applicationName ?? "未知应用",
-                           windowTitle: w.title ?? "",
-                           width: Int(w.frame.width * 2),   // 粗略 Retina 像素（仅显示用）
-                           height: Int(w.frame.height * 2),
-                           onScreen: w.isOnScreen, scWindow: w)
+            .map { w -> WindowInfo in
+                let px = pixelSize(of: w)
+                return WindowInfo(id: w.windowID,
+                                  appBundleID: w.owningApplication?.bundleIdentifier,
+                                  appName: w.owningApplication?.applicationName ?? "未知应用",
+                                  windowTitle: w.title ?? "",
+                                  width: px.width,
+                                  height: px.height,
+                                  pointWidth: Int(w.frame.width.rounded()),
+                                  pointHeight: Int(w.frame.height.rounded()),
+                                  onScreen: w.isOnScreen, scWindow: w)
             }
+            // 主窗口在前：按可见面积降序，避免把工具条/浮层排在首位被误选。
+            .sorted { ($0.pointWidth * $0.pointHeight) > ($1.pointWidth * $1.pointHeight) }
         return AvailableTargets(displays: displays, windows: windows)
+    }
+
+    /// 窗口的真实像素尺寸。
+    ///
+    /// 不能由 `frame × 2` 推算：`SCWindow.frame` 是点，缩放比例取决于该窗口所在显示器
+    /// （内置 Retina 为 2×，外接非 Retina 为 1×，缩放分辨率也可能是非整数倍）。
+    public static func pixelSize(of window: SCWindow) -> (width: Int, height: Int) {
+        let filter = SCContentFilter(desktopIndependentWindow: window)
+        let scale = CGFloat(filter.pointPixelScale)
+        let rect = filter.contentRect
+        var w = Int((rect.width * scale).rounded())
+        var h = Int((rect.height * scale).rounded())
+        if w <= 0 || h <= 0 {
+            // 极少数窗口 contrentRect 为空：退回点数（保底，不放大）
+            w = Int(window.frame.width.rounded())
+            h = Int(window.frame.height.rounded())
+        }
+        return (max(1, w), max(1, h))
     }
 }
 
@@ -88,6 +116,8 @@ public enum ScreenPermission {
 ///
 /// 采集策略：
 ///  - 输出 kCVPixelFormatType_32BGRA，最小帧间隔由 detectionFPS 决定；
+///  - **尺寸取自实时窗口/显示器几何**（不信任持久化的旧目标尺寸，否则会把
+///    2560×1440 的窗口压成几百像素，既糊又让检测阈值失真）；
 ///  - 每帧回调交给 onFrame（在串行 queue 上），由上层做灰度化/检测/入缓冲；
 ///  - 流错误（含权限被撤销）通过 onError 上报，上层决定重试或停止。
 public final class CaptureService: NSObject, SCStreamOutput, SCStreamDelegate {
@@ -104,39 +134,70 @@ public final class CaptureService: NSObject, SCStreamOutput, SCStreamDelegate {
     /// 当前会话实际采集的像素尺寸（首帧时填充，用于元数据）。
     public private(set) var captureSize: (width: Int, height: Int)?
 
-    public func start(target: CaptureTargetID, fps: Double) throws {
+    /// 上限保护：异常几何不应触发超大帧缓冲。
+    private static let maxDimension = 8192
+
+    /// 开始采集。
+    /// - Returns: 实际使用的目标（含实时像素尺寸；窗口 ID 失效时可能是重新解析到的窗口）。
+    @discardableResult
+    public func start(target: CaptureTargetID, fps: Double) throws -> CaptureTargetID {
         stop()
         let content = try awaitish { try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true) }
         let filter: SCContentFilter
+        var resolved = target
+        var pixelWidth = target.pixelWidth
+        var pixelHeight = target.pixelHeight
+
         switch target.kind {
         case .display:
             guard let display = content.displays.first(where: { $0.displayID == target.id }) else {
                 throw CaptureServiceError.contentUnavailable("显示器 \(target.id) 已不可用")
             }
             filter = SCContentFilter(display: display, excludingWindows: [])
+            pixelWidth = display.width
+            pixelHeight = display.height
+            resolved.pixelWidth = pixelWidth
+            resolved.pixelHeight = pixelHeight
         case .window:
-            guard let window = content.windows.first(where: { $0.windowID == target.id }) else {
-                throw CaptureServiceError.contentUnavailable("窗口 \(target.id) 已不可用或已关闭")
+            guard let window = Self.resolveWindow(for: target, in: content) else {
+                throw CaptureServiceError.contentUnavailable(
+                    "窗口 \(target.id) 已不可用或已关闭（应用：\(target.appName ?? "未知")）")
             }
             filter = SCContentFilter(desktopIndependentWindow: window)
+            let scale = CGFloat(filter.pointPixelScale)
+            let rect = filter.contentRect
+            pixelWidth = max(1, Int((rect.width * scale).rounded()))
+            pixelHeight = max(1, Int((rect.height * scale).rounded()))
+            resolved = CaptureTargetID(kind: .window, id: window.windowID,
+                                       appBundleID: window.owningApplication?.bundleIdentifier ?? target.appBundleID,
+                                       appName: window.owningApplication?.applicationName ?? target.appName,
+                                       windowTitle: window.title ?? target.windowTitle,
+                                       pixelWidth: pixelWidth, pixelHeight: pixelHeight)
         }
 
+        let width = min(pixelWidth, Self.maxDimension)
+        let height = min(pixelHeight, Self.maxDimension)
+
         let config = SCStreamConfiguration()
-        config.width = target.pixelWidth
-        config.height = target.pixelHeight
+        config.width = width
+        config.height = height
         config.minimumFrameInterval = CMTime(value: 1, timescale: Int32(max(1, Int(fps.rounded()))))
         config.pixelFormat = kCVPixelFormatType_32BGRA
-        config.showsCursor = true
-        config.queueDepth = 6
+        // 光标会烧进截图与检测帧：鼠标移动会产生虚假变化，也不适合作为学习素材。
+        config.showsCursor = false
+        // 队列深度留出余量：会话层会尽快归还采集缓冲，但仍避免池被打满导致停摆。
+        config.queueDepth = 8
         config.colorSpaceName = CGColorSpace.sRGB
+        config.scalesToFit = false
 
         let stream = SCStream(filter: filter, configuration: config, delegate: self)
         try stream.addStreamOutput(self, type: .screen, sampleHandlerQueue: queue)
         try stream.startCapture()
         self.stream = stream
-        self.target = target
+        self.target = resolved
         self.captureSize = nil
         self.isRunning = true
+        return resolved
     }
 
     public func stop() {
@@ -146,6 +207,33 @@ public final class CaptureService: NSObject, SCStreamOutput, SCStreamDelegate {
         self.target = nil
         self.isRunning = false
         self.captureSize = nil
+    }
+
+    /// 解析目标窗口：精确 ID 优先；ID 会在应用重启/窗口重建后变化，
+    /// 因此退回到「同应用 + 同标题」，再退回到「同应用最大窗口」。
+    static func resolveWindow(for target: CaptureTargetID, in content: SCShareableContent) -> SCWindow? {
+        if let exact = content.windows.first(where: { $0.windowID == target.id }) {
+            return exact
+        }
+        let candidatePool = content.windows.filter { $0.isOnScreen && $0.windowLayer == 0 }
+        if let bundle = target.appBundleID {
+            let sameApp = candidatePool.filter { $0.owningApplication?.bundleIdentifier == bundle }
+            if let title = target.windowTitle, !title.isEmpty,
+               let byTitle = sameApp.first(where: { ($0.title ?? "") == title }) {
+                return byTitle
+            }
+            if let largest = sameApp.max(by: {
+                ($0.frame.width * $0.frame.height) < ($1.frame.width * $1.frame.height)
+            }) {
+                return largest
+            }
+        }
+        if let name = target.appName, !name.isEmpty {
+            return candidatePool
+                .filter { $0.owningApplication?.applicationName == name }
+                .max(by: { ($0.frame.width * $0.frame.height) < ($1.frame.width * $1.frame.height) })
+        }
+        return nil
     }
 
     /// SCStreamOutput
@@ -176,7 +264,7 @@ public final class CaptureService: NSObject, SCStreamOutput, SCStreamDelegate {
         case .display:
             return content.displays.contains { $0.displayID == target.id }
         case .window:
-            return content.windows.contains { $0.windowID == target.id && $0.isOnScreen }
+            return resolveWindow(for: target, in: content) != nil
         }
     }
 

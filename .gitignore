@@ -10,3 +10,6 @@ xcuserdata/
 
 # 构建产物不入库（build/ 下的 .app/.framework 由 xcodebuild 生成）
 build/
+
+# 本地回滚备份（不入库）
+backups/

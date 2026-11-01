@@ -27,11 +27,11 @@ struct HistoryView: View {
             .padding(12)
             Divider()
             if filtered.isEmpty {
-                VStack(spacing: 8) {
-                    Image(systemName: "camera.on.rectangle").font(.largeTitle).foregroundStyle(.secondary)
-                    Text("暂无截图记录").foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                EmptyStateView(
+                    systemImage: "camera.on.rectangle",
+                    title: filter == nil ? "暂无截图记录" : "没有符合筛选条件的记录",
+                    subtitle: filter == nil ? "开始截图后，记录会显示在这里" : "换一个筛选条件试试"
+                )
             } else {
                 List(filtered, id: \.id, selection: $selectedID) { item in
                     HistoryRow(item: item)
@@ -78,15 +78,7 @@ private struct HistoryRow: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            if let thumb = NSImage(contentsOf: item.fileURL) {
-                Image(nsImage: thumb)
-                    .resizable().aspectRatio(contentMode: .fill)
-                    .frame(width: 64, height: 40)
-                    .clipShape(RoundedRectangle(cornerRadius: 4))
-            } else {
-                RoundedRectangle(cornerRadius: 4).fill(Color.gray.opacity(0.15))
-                    .frame(width: 64, height: 40)
-            }
+            ThumbnailView(url: item.fileURL, size: CGSize(width: 64, height: 40))
             VStack(alignment: .leading, spacing: 2) {
                 Text(item.filename).font(.caption).lineLimit(1).truncationMode(.middle)
                 Text(item.reasonLabel).font(.caption2).foregroundStyle(.secondary).lineLimit(2)
@@ -126,9 +118,13 @@ private struct GeneralSettingsTab: View {
             Toggle("登录时启动", isOn: $settings.launchAtLogin)
             Toggle("关闭窗口时继续后台运行", isOn: $settings.keepRunningOnClose)
             Toggle("显示菜单栏图标", isOn: $settings.showMenuBar)
+            Text("当前版本菜单栏图标常驻，此开关为预留项。")
+                .font(.caption2).foregroundStyle(.tertiary)
             Spacer()
             Text("Smart Shot 是实验性原型；智能检测不能保证捕获所有短暂内容。")
                 .font(.caption).foregroundStyle(.secondary)
+            Text("版本 \(AppInfo.versionLine) · © 2026 TimmySheep")
+                .font(.caption2).foregroundStyle(.tertiary)
         }
         .formStyle(.grouped)
     }
