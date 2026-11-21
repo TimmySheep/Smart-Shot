@@ -1,4 +1,19 @@
-# Smart Shot
+<!--readme-header-->
+<p align="center">
+  <img src="SmartShot/Assets.xcassets/AppIcon.appiconset/icon-1024.png" width="128" alt="Smart Shot icon">
+</p>
+
+<h1 align="center">Smart Shot</h1>
+
+<p align="center">
+  <b>只在画面真正变化时保存截图</b><br>
+  <sub>Saves a frame only when the picture actually changes</sub>
+</p>
+
+<p align="center"><img alt="platform" src="https://img.shields.io/badge/platform-macOS%2014%2B-000000?logo=apple&logoColor=white"><img alt="license" src="https://img.shields.io/github/license/TimmySheep/Smart-Shot?label=license&color=green"><img alt="release" src="https://img.shields.io/github/v/release/TimmySheep/Smart-Shot?label=release&color=blue"></p>
+
+---
+<!--/readme-header-->
 
 原生 macOS 智能截图工具。只在画面内容真正发生变化时保存截图，而不是按固定频率堆一堆重复图片。
 Native macOS screenshot tool that saves a frame only when the picture actually changes, instead of piling up duplicates on a timer.
